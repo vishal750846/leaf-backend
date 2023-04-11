@@ -5,7 +5,7 @@ exports.signup = async (req, res)=>{
     const user = new User(req.body)
     try{
         await user.save()
-        res.status(201).send({status : 400 , message : "User Created Successfully"})
+        res.status(201).send(user)
     }catch (error){
         if ( error.code === 11000) {
             return  res.status(400).send({status : 400 , message : "Email Already exists"});
@@ -18,9 +18,13 @@ exports.signup = async (req, res)=>{
 exports.login =  async (req, res) =>{
     try{
         const user = await User.findByCredentials(req.body.email, req.body.password)
-        res.send(user)
+        res.send({message : "User logged in"})
     }catch(e){
-        res.status(400).send()
+        if (e.message == 401) {
+            return  res.status(400).send({status : 401 , message : "Invalid credentials"});
+        }
+        res.status(400).send({status : 404 , message : "User not found"});
+          
     }
 }
 
