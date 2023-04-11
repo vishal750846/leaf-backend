@@ -5,7 +5,7 @@ exports.signup = async (req, res)=>{
     const user = new User(req.body)
     try{
         await user.save()
-        res.status(201).send(user)
+        res.status(201).send({status : 400 , message : "User Created Successfully"})
     }catch (error){
         if ( error.code === 11000) {
             return  res.status(400).send({status : 400 , message : "Email Already exists"});
